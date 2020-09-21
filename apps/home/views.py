@@ -21,17 +21,7 @@ class DashboardView(TemplateView):
         qs_register = None
         if request.user.is_authenticated:
             user = request.user
-            try:
-                qs_register = request.user.fk_registers_users.filter(fk_user=user)
-                register = qs_register[0]
-                if register.register_image is None or \
-                        register.register_image == '':
-                    user_image = None
-                else:
-                    user_image = register.register_image.url
-            except ObjectDoesNotExist:
-                user = None
-                user_image = None
+            user_image = None
         else:
             user = None
             user_image = None
@@ -39,7 +29,6 @@ class DashboardView(TemplateView):
             'user': user,
             'user_image': user_image,
             'profile': True,
-            'qs_registers': qs_register,
             'message': message
         }
         return render(request, self.template_name, params)
