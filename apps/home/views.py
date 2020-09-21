@@ -18,17 +18,17 @@ class DashboardView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         message = kwargs.get('message', '')
+        user = None
+        user_image = None
         qs_register = None
         if request.user.is_authenticated:
             user = request.user
-            user_image = None
-        else:
-            user = None
             user_image = None
         params = {
             'user': user,
             'user_image': user_image,
             'profile': True,
+            'qs_registers': qs_register,
             'message': message
         }
         return render(request, self.template_name, params)
