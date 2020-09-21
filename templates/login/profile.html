@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+    {% load static %}
+
+    <!-- Begin Page Content -->
+    {% block content %}
+    <div class="card o-hidden border-0 shadow-lg">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-2 d-none d-lg-block"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="row">
+                            <div class="col-4 float-left">
+                                <a class="" href="#" id="user_image">
+                                    {% if user and user_image %}
+                                    <img class="img-profile rounded-circle" src="{{ user_image }}">
+                                    {% else %}
+                                    <i class="h1 text-primary img-profile rounded-circle fas fa-user"></i>
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="col-8 float-right text-center p-5">
+                                <h3 class="float-right h4 text-gray-900 mt-4 mr-5">Meu Cadastro</h3>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr />
+                        <form class="user" method="post" enctype="multipart/form-data" action="{% url 'registers:registers_profile' %}">
+                            {% csrf_token %}
+
+                            {% for field in form.hidden_fields %}
+                                {{ field }}
+                            {% endfor %}
+
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <span class="text-danger small">{{ form.first_name.errors }}</span>
+                                    {{ form.first_name }}
+                                    <span class="text-success small">{{ form.first_name.help_text }}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="text-danger small">{{ form.last_name.errors }}</span>
+                                    {{ form.last_name }}
+                                    <span class="text-success small">{{ form.last_name.help_text }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span class="text-danger small">{{ form.email.errors }}</span>
+                                {{ form.email }}
+                                <span class="text-success small">{{ form.email.help_text }}</span>
+                            </div>
+                            {% if not user %}
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <span class="text-danger small">{{ form.password.errors }}</span>
+                                    {{ form.password }}
+                                    <span class="text-success small">{{ form.password.help_text }}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="text-danger small">{{ form.password_confirm.errors }}</span>
+                                    {{ form.password_confirm }}
+                                    <span class="text-success small">{{ form.password_confirm.help_text }}</span>
+                                </div>
+                                <div class="container bg-gray-200 rounded pl-5">
+                                    A senha deve conter pelo menos:
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item badge badge-primary">6 caracteres</li>
+                                        <li class="list-inline-item badge badge-primary">1 caracter maíusculo</li>
+                                        <li class="list-inline-item badge badge-primary">1 digito</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <span class="text-danger small">{{ form.fk_documents_types.errors }}</span>
+                                    {{ form.fk_documents_types }}
+                                    <span class="text-success small">{{ form.fk_documents_types.help_text }}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="text-danger small">{{ form.document_id.errors }}</span>
+                                    {{ form.document_id }}
+                                    <span class="text-success small">{{ form.document_id.help_text }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <span class="text-danger small">{{ form.fk_enterprise.errors }}</span>
+                                    {{ form.fk_enterprise }}
+                                    <span class="text-success small">{{ form.fk_enterprise.help_text }}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="text-danger small">{{ form.register_image.errors }}</span>
+                                    {{ form.register_image }}
+                                    <span class="text-success small">{{ form.register_image.help_text }}</span>
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-primary btn-user btn-block" value="Salvar Modificações">
+                            <a class="btn btn-warning btn-user btn-block" href="{% url 'core:index' %}">Voltar</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Card -->
+    {% endblock %}
+    <!-- End of Main Content -->
+
+    {% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+    <script language="JavaScript">
+        /**
+         * Handle movies page Events.
+         *
+         *
+         * @version    1.0.0
+         * @package    i-city
+         * @subpackage js
+         * @author     Alcindo Schleder <alcindoschleder@gmail.com>
+         *
+         */
+
+        var ProfileEvents = function () {
+
+            var documentEvents = function () {
+                $("#id_fk_documents_types").change(function (e) {
+                    flag = ($(this).children("option:selected").text().includes('C.P.F.'))
+                    $('#id_document_id').val('');
+                    if (flag === true )
+                        $('#id_document_id').mask('000.000.000-00');
+                    else
+                        $('#id_document_id').mask('00.000.000/0000-00');
+                });
+            };
+
+            return {
+                //main function to initiate the module
+                init: function () {
+                    documentEvents();
+                }
+            };
+        }();
+
+        $(document).ready(function() {
+            ProfileEvents.init(); // starting home page events
+        });
+    </script>
+    {% endblock %}
